@@ -47,6 +47,7 @@ const App: React.FC<AppProps> = ({ query = TORONTO }) => {
   });
 
   const [metroAreaId, setMetroAreaId] = useState(null);
+  const [userEvents, setUserEvents] = useState([] as any);
 
 
   const { loading, error, data } = useQuery(GET_EVENTS_BY_METRO_AREA, {
@@ -58,7 +59,20 @@ const App: React.FC<AppProps> = ({ query = TORONTO }) => {
   console.log('renderedData', renderedData)
   return (
     <div className="App">
-      {renderedData ? renderedData[0].metroArea.events.event.map((event: any) => (<li key={event.id}>{event.displayName}</li>)) : null}
+      <div>
+        <h3>My events</h3>
+        <ul>
+          {userEvents && userEvents.map((event: string, index: number) => (<li key={`${event}-${index}`}>{event}</li>))}
+        </ul>
+      </div>
+      <ul>
+        {renderedData ? renderedData[0].metroArea.events.event.map((eventObj: any) => (
+        <li key={eventObj.id}>
+          <p>{eventObj.displayName}</p>
+          <button onClick={() => setUserEvents([eventObj.displayName])}>+</button>
+          </li>))
+        : null}
+      </ul>
     </div>
   );
 }
